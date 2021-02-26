@@ -5,3 +5,34 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Auction.delete_all
+Bid.delete_all
+
+10.times do
+    created_at=Faker::Date.backward(days: 30)
+    a=Auction.create(
+        title: Faker::Device.manufacturer,
+        description: Faker::Hacker.say_something_smart,
+        price: rand(1..1000),
+        reserve_price: rand(1..1000),
+        end_date: Faker::Date.forward(days: 30),
+        created_at: created_at,
+        updated_at: created_at
+    )
+
+    if a.valid?
+        a.bids = rand(2..11).times.map do
+            created_at=Faker::Date.backward(days: 10)
+            Bid.new(
+                offer: rand(1..1000),
+                created_at: created_at,
+                updated_at: created_at
+            )
+        end
+    end
+end
+
+auction=Auction.all
+bid=Bid.all
+
+puts "Generated #{auction.count} auctions, #{bid.count} bids"

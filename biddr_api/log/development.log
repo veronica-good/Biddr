@@ -1,0 +1,477 @@
+  [1m[35m (211.2ms)[0m  [1m[35mCREATE DATABASE "biddr_api_development" ENCODING = 'unicode'[0m
+  [1m[35m (144.4ms)[0m  [1m[35mCREATE DATABASE "biddr_api_test" ENCODING = 'unicode'[0m
+  [1m[35m (38.3ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (11.5ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT pg_try_advisory_lock(8427587142396744315)[0m
+  [1m[35m (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateAuctions (20210226174712)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (11.5ms)[0m  [1m[35mCREATE TABLE "auctions" ("id" bigserial primary key, "title" character varying, "description" character varying, "price" float, "end_date" timestamp, "reserve_price" float, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.6ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20210226174712"]]
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2021-02-26 17:47:43.483227"], ["updated_at", "2021-02-26 17:47:43.483227"]]
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_advisory_unlock(8427587142396744315)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(8427587142396744315)[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateBids (20210226175009)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (33.4ms)[0m  [1m[35mCREATE TABLE "bids" ("id" bigserial primary key, "offer" float, "auction_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_7332d1a025"
+FOREIGN KEY ("auction_id")
+  REFERENCES "auctions" ("id")
+)[0m
+  [1m[35m (4.7ms)[0m  [1m[35mCREATE INDEX "index_bids_on_auction_id" ON "bids" ("auction_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20210226175009"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(8427587142396744315)[0m
+  [1m[35m (1.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.3ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.3ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "DellXiaomi Pocophone F1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "DellXiaomi Pocophone F1"], ["LIMIT", 1]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.4ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.3ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUSXiaomi Mi 8 SE"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUSXiaomi Mi 8 SE"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HuaweiiPhone 4S"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HuaweiiPhone 4S"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.8ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "LenovoiPhone 4S"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "LenovoiPhone 4S"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerSamsung Galaxy S3 Mini"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerSamsung Galaxy S3 Mini"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerHuawei Mate 9"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerHuawei Mate 9"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleGoogle Pixel 2 XL"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleGoogle Pixel 2 XL"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AceriPhone 3GS"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (1.1ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AceriPhone 3GS"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "XiamomiHuawei Mate 20"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "XiamomiHuawei Mate 20"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerSamsung Galaxy S4 Mini"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerSamsung Galaxy S4 Mini"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "OnePlusHuawei P Smart"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "OnePlusHuawei P Smart"], ["LIMIT", 1]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.3ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.3ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerSamsung Galaxy S1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AcerSamsung Galaxy S1"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleGoogle Pixel XL"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleGoogle Pixel XL"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HPOnePlus 6"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HPOnePlus 6"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AceriPhone 5C"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AceriPhone 5C"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "LenovoiPhone 7 / 7 Plus"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "LenovoiPhone 7 / 7 Plus"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleSamsung Galaxy S9"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleSamsung Galaxy S9"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleGoogle Pixel XL"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "AppleGoogle Pixel XL"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HPSamsung Galaxy S7 Edge"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HPSamsung Galaxy S7 Edge"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "DellOnePlus 6T"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "DellOnePlus 6T"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "XiamomiSamsung Galaxy S3 Mini"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "XiamomiSamsung Galaxy S3 Mini"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.3ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.2ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Dell"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Dell"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUS"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUS"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUS"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUS"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[35mCACHE  (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35mCACHE  (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.3ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.2ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Lenovo"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Lenovo"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "OnePlus"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "OnePlus"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Lenovo"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Lenovo"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mAuction Load (0.3ms)[0m  [1m[34mSELECT "auctions".* FROM "auctions" /* loading for inspect */ LIMIT $1[0m  [["LIMIT", 11]]
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata"."value" FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1[0m  [["key", "environment"]]
+  [1m[35m (50.4ms)[0m  [1m[35mDROP DATABASE IF EXISTS "biddr_api_development"[0m
+  [1m[35m (45.0ms)[0m  [1m[35mDROP DATABASE IF EXISTS "biddr_api_test"[0m
+  [1m[35m (137.9ms)[0m  [1m[35mCREATE DATABASE "biddr_api_development" ENCODING = 'unicode'[0m
+  [1m[35m (157.7ms)[0m  [1m[35mCREATE DATABASE "biddr_api_test" ENCODING = 'unicode'[0m
+  [1m[35mSQL (0.8ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE IF EXISTS "auctions" CASCADE[0m
+  [1m[35m (23.1ms)[0m  [1m[35mCREATE TABLE "auctions" ("id" bigserial primary key, "title" character varying, "description" character varying, "price" float, "end_date" timestamp, "reserve_price" float, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.5ms)[0m  [1m[35mDROP TABLE IF EXISTS "bids" CASCADE[0m
+  [1m[35m (10.6ms)[0m  [1m[35mCREATE TABLE "bids" ("id" bigserial primary key, "offer" float, "auction_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (9.1ms)[0m  [1m[35mCREATE INDEX "index_bids_on_auction_id" ON "bids" ("auction_id")[0m
+  [1m[35m (6.4ms)[0m  [1m[35mALTER TABLE "bids" ADD CONSTRAINT "fk_rails_7332d1a025"
+FOREIGN KEY ("auction_id")
+  REFERENCES "auctions" ("id")
+[0m
+  [1m[35m (16.8ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (2.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20210226175009)[0m
+  [1m[35m (2.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20210226174712);
+
+[0m
+  [1m[35m (12.0ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2021-02-26 18:37:06.433090"], ["updated_at", "2021-02-26 18:37:06.433090"]]
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "49b12452cbb3a3a867ff960e300422bd60ef6966"], ["created_at", "2021-02-26 18:37:06.445218"], ["updated_at", "2021-02-26 18:37:06.445218"]]
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mCREATE EXTENSION IF NOT EXISTS "plpgsql"[0m
+  [1m[35m (0.1ms)[0m  [1m[35mDROP TABLE IF EXISTS "auctions" CASCADE[0m
+  [1m[35m (15.6ms)[0m  [1m[35mCREATE TABLE "auctions" ("id" bigserial primary key, "title" character varying, "description" character varying, "price" float, "end_date" timestamp, "reserve_price" float, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.3ms)[0m  [1m[35mDROP TABLE IF EXISTS "bids" CASCADE[0m
+  [1m[35m (7.8ms)[0m  [1m[35mCREATE TABLE "bids" ("id" bigserial primary key, "offer" float, "auction_id" bigint NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (6.9ms)[0m  [1m[35mCREATE INDEX "index_bids_on_auction_id" ON "bids" ("auction_id")[0m
+  [1m[35m (3.6ms)[0m  [1m[35mALTER TABLE "bids" ADD CONSTRAINT "fk_rails_7332d1a025"
+FOREIGN KEY ("auction_id")
+  REFERENCES "auctions" ("id")
+[0m
+  [1m[35m (13.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (3.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20210226175009)[0m
+  [1m[35m (2.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20210226174712);
+
+[0m
+  [1m[35m (15.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.7ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.9ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "development"], ["created_at", "2021-02-26 18:37:06.566386"], ["updated_at", "2021-02-26 18:37:06.566386"]]
+  [1m[36mTRANSACTION (2.7ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Update (0.4ms)[0m  [1m[33mUPDATE "ar_internal_metadata" SET "value" = $1, "updated_at" = $2 WHERE "ar_internal_metadata"."key" = $3[0m  [["value", "test"], ["updated_at", "2021-02-26 18:37:06.596801"], ["key", "environment"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.3ms)[0m  [1m[34mSELECT "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "schema_sha1"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.3ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "schema_sha1"], ["value", "49b12452cbb3a3a867ff960e300422bd60ef6966"], ["created_at", "2021-02-26 18:37:06.607144"], ["updated_at", "2021-02-26 18:37:06.607144"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.3ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.3ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mCACHE Auction Exists? (0.0ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "HP"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUS"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "ASUS"], ["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mAuction Destroy (0.3ms)[0m  [1m[31mDELETE FROM "auctions"[0m
+  [1m[36mBid Destroy (0.3ms)[0m  [1m[31mDELETE FROM "bids"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.5ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Dell"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.5ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "Dell"], ["description", "Calculating the matrix won't do anything, we need to calculate the primary ftp transmitter!"], ["price", 543.0], ["end_date", "2021-03-05 00:00:00"], ["reserve_price", 275.0], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mTRANSACTION (3.6ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "Dell"], ["id", 1], ["LIMIT", 1]]
+  [1m[36mBid Load (0.2ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.6ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 572.0], ["auction_id", 1], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 305.0], ["auction_id", 1], ["created_at", "2021-02-19 00:00:00"], ["updated_at", "2021-02-19 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 527.0], ["auction_id", 1], ["created_at", "2021-02-25 00:00:00"], ["updated_at", "2021-02-25 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 29.0], ["auction_id", 1], ["created_at", "2021-02-18 00:00:00"], ["updated_at", "2021-02-18 00:00:00"]]
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "OnePlus"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.3ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "OnePlus"], ["description", "The IB transmitter is down, program the auxiliary sensor so we can navigate the SQL capacitor!"], ["price", 366.0], ["end_date", "2021-02-27 00:00:00"], ["reserve_price", 447.0], ["created_at", "2021-02-25 00:00:00"], ["updated_at", "2021-02-25 00:00:00"]]
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "OnePlus"], ["id", 2], ["LIMIT", 1]]
+  [1m[36mBid Load (0.2ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 2]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 99.0], ["auction_id", 2], ["created_at", "2021-02-24 00:00:00"], ["updated_at", "2021-02-24 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 669.0], ["auction_id", 2], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.2ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "Apple"], ["description", "Try to quantify the RSS capacitor, maybe it will synthesize the wireless hard drive!"], ["price", 79.0], ["end_date", "2021-03-03 00:00:00"], ["reserve_price", 961.0], ["created_at", "2021-02-01 00:00:00"], ["updated_at", "2021-02-01 00:00:00"]]
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "Apple"], ["id", 3], ["LIMIT", 1]]
+  [1m[36mBid Load (0.2ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 3]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 483.0], ["auction_id", 3], ["created_at", "2021-02-24 00:00:00"], ["updated_at", "2021-02-24 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 462.0], ["auction_id", 3], ["created_at", "2021-02-20 00:00:00"], ["updated_at", "2021-02-20 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 67.0], ["auction_id", 3], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 790.0], ["auction_id", 3], ["created_at", "2021-02-18 00:00:00"], ["updated_at", "2021-02-18 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 250.0], ["auction_id", 3], ["created_at", "2021-02-20 00:00:00"], ["updated_at", "2021-02-20 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 561.0], ["auction_id", 3], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 111.0], ["auction_id", 3], ["created_at", "2021-02-22 00:00:00"], ["updated_at", "2021-02-22 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 305.0], ["auction_id", 3], ["created_at", "2021-02-23 00:00:00"], ["updated_at", "2021-02-23 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 230.0], ["auction_id", 3], ["created_at", "2021-02-24 00:00:00"], ["updated_at", "2021-02-24 00:00:00"]]
+  [1m[36mBid Create (0.2ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 896.0], ["auction_id", 3], ["created_at", "2021-02-25 00:00:00"], ["updated_at", "2021-02-25 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 489.0], ["auction_id", 3], ["created_at", "2021-02-23 00:00:00"], ["updated_at", "2021-02-23 00:00:00"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.3ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "Xiamomi"], ["description", "We need to override the back-end SSL system!"], ["price", 148.0], ["end_date", "2021-03-21 00:00:00"], ["reserve_price", 655.0], ["created_at", "2021-02-20 00:00:00"], ["updated_at", "2021-02-20 00:00:00"]]
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "Xiamomi"], ["id", 4], ["LIMIT", 1]]
+  [1m[36mBid Load (0.3ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 4]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 744.0], ["auction_id", 4], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 20.0], ["auction_id", 4], ["created_at", "2021-02-19 00:00:00"], ["updated_at", "2021-02-19 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 85.0], ["auction_id", 4], ["created_at", "2021-02-19 00:00:00"], ["updated_at", "2021-02-19 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 212.0], ["auction_id", 4], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 685.0], ["auction_id", 4], ["created_at", "2021-02-22 00:00:00"], ["updated_at", "2021-02-22 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 187.0], ["auction_id", 4], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 308.0], ["auction_id", 4], ["created_at", "2021-02-24 00:00:00"], ["updated_at", "2021-02-24 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 152.0], ["auction_id", 4], ["created_at", "2021-02-18 00:00:00"], ["updated_at", "2021-02-18 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 124.0], ["auction_id", 4], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 513.0], ["auction_id", 4], ["created_at", "2021-02-24 00:00:00"], ["updated_at", "2021-02-24 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 159.0], ["auction_id", 4], ["created_at", "2021-02-22 00:00:00"], ["updated_at", "2021-02-22 00:00:00"]]
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Huawei"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.3ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "Huawei"], ["description", "You can't back up the transmitter without bypassing the 1080p COM transmitter!"], ["price", 162.0], ["end_date", "2021-03-01 00:00:00"], ["reserve_price", 351.0], ["created_at", "2021-02-04 00:00:00"], ["updated_at", "2021-02-04 00:00:00"]]
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "Huawei"], ["id", 5], ["LIMIT", 1]]
+  [1m[36mBid Load (0.2ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 5]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 193.0], ["auction_id", 5], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 299.0], ["auction_id", 5], ["created_at", "2021-02-22 00:00:00"], ["updated_at", "2021-02-22 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 545.0], ["auction_id", 5], ["created_at", "2021-02-25 00:00:00"], ["updated_at", "2021-02-25 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 262.0], ["auction_id", 5], ["created_at", "2021-02-16 00:00:00"], ["updated_at", "2021-02-16 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 237.0], ["auction_id", 5], ["created_at", "2021-02-23 00:00:00"], ["updated_at", "2021-02-23 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 333.0], ["auction_id", 5], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 464.0], ["auction_id", 5], ["created_at", "2021-02-20 00:00:00"], ["updated_at", "2021-02-20 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 136.0], ["auction_id", 5], ["created_at", "2021-02-23 00:00:00"], ["updated_at", "2021-02-23 00:00:00"]]
+  [1m[36mTRANSACTION (2.1ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.4ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Dell"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Dell"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Xiamomi"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Lenovo"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.3ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "Lenovo"], ["description", "You can't parse the array without transmitting the haptic SQL program!"], ["price", 218.0], ["end_date", "2021-03-09 00:00:00"], ["reserve_price", 274.0], ["created_at", "2021-02-16 00:00:00"], ["updated_at", "2021-02-16 00:00:00"]]
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "Lenovo"], ["id", 6], ["LIMIT", 1]]
+  [1m[36mBid Load (0.3ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 6]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 802.0], ["auction_id", 6], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 492.0], ["auction_id", 6], ["created_at", "2021-02-16 00:00:00"], ["updated_at", "2021-02-16 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 529.0], ["auction_id", 6], ["created_at", "2021-02-21 00:00:00"], ["updated_at", "2021-02-21 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 248.0], ["auction_id", 6], ["created_at", "2021-02-16 00:00:00"], ["updated_at", "2021-02-16 00:00:00"]]
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mAuction Exists? (0.3ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Apple"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mAuction Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 LIMIT $2[0m  [["title", "Acer"], ["LIMIT", 1]]
+  [1m[36mAuction Create (0.2ms)[0m  [1m[32mINSERT INTO "auctions" ("title", "description", "price", "end_date", "reserve_price", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["title", "Acer"], ["description", "Quantifying the matrix won't do anything, we need to parse the neural scsi program!"], ["price", 565.0], ["end_date", "2021-03-13 00:00:00"], ["reserve_price", 639.0], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mTRANSACTION (2.5ms)[0m  [1m[35mCOMMIT[0m
+  [1m[36mAuction Exists? (0.7ms)[0m  [1m[34mSELECT 1 AS one FROM "auctions" WHERE "auctions"."title" = $1 AND "auctions"."id" != $2 LIMIT $3[0m  [["title", "Acer"], ["id", 7], ["LIMIT", 1]]
+  [1m[36mBid Load (0.4ms)[0m  [1m[34mSELECT "bids".* FROM "bids" WHERE "bids"."auction_id" = $1[0m  [["auction_id", 7]]
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[36mBid Create (0.5ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 865.0], ["auction_id", 7], ["created_at", "2021-02-24 00:00:00"], ["updated_at", "2021-02-24 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 488.0], ["auction_id", 7], ["created_at", "2021-02-23 00:00:00"], ["updated_at", "2021-02-23 00:00:00"]]
+  [1m[36mBid Create (0.4ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 293.0], ["auction_id", 7], ["created_at", "2021-02-22 00:00:00"], ["updated_at", "2021-02-22 00:00:00"]]
+  [1m[36mBid Create (0.3ms)[0m  [1m[32mINSERT INTO "bids" ("offer", "auction_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "id"[0m  [["offer", 500.0], ["auction_id", 7], ["created_at", "2021-02-17 00:00:00"], ["updated_at", "2021-02-17 00:00:00"]]
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.8ms)[0m  [1m[34mSELECT COUNT(*) FROM "auctions"[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT COUNT(*) FROM "bids"[0m
+  [1m[36mAuction Load (0.5ms)[0m  [1m[34mSELECT "auctions".* FROM "auctions" ORDER BY "auctions"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]
+  [1m[36mBid Load (1.1ms)[0m  [1m[34mSELECT "bids".* FROM "bids" ORDER BY "bids"."id" ASC LIMIT $1[0m  [["LIMIT", 1]]

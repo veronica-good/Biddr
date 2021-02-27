@@ -5,8 +5,9 @@ class AuctionSerializer < ActiveModel::Serializer
   class UserSerializer < ActiveModel::Serializer
     attributes :id, :name
   end
-  class BidsSerializer < ActiveModel::Serializer
+  class BidSerializer < ActiveModel::Serializer
     attributes :id, :offer, :created_at
     belongs_to :user
+    belongs_to :auction
   end 
 end

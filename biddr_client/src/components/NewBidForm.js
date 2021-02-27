@@ -4,7 +4,9 @@ function NewBidForm(props){
     const handleBidSubmit = event=>{
         event.preventDefault();
         const fd= new FormData(event.currentTarget);
-        console.log(props.auction)
+        // const params = {
+        //     offer: fd.get('offer')
+        // }
         props.onSubmit(props.auction.id, {offer: fd.get('offer')})
         event.currentTarget.reset();
     }

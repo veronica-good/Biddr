@@ -11,6 +11,7 @@ import AuctionShowPage from './components/AuctionShowPage';
 import AuctionNewPage from './components/AuctionNewPage';
 import { Session } from './requests';
 import SignInPage from './components/SignInPage';
+import SignUpPage from './components/SignUpPage';
 import Navbar from './components/Navbar';
 import Welcome from './components/Welcome';
 import AuthRoute from './components/AuthRoute';
@@ -34,10 +35,17 @@ class App extends Component{
       })
     })
   }
-  handleSubmit(params){
-    // params look like this : {email: 'js@winterfell.gov', password: 'supersecret'}
-    Session.create(params).then(()=>{
 
+  handleSignUp(){
+    Session.currentUser().then(user=>{
+      this.setState((state)=>{
+        return {user:user}
+      })
+    })
+  }
+
+  handleSubmit(params){
+    Session.create(params).then(()=>{
       return Session.currentUser()}
       ).then(user=>{
         console.log('user', user);
@@ -45,8 +53,8 @@ class App extends Component{
           return {user:user}
         })
       })
-
   }
+
   destroySession(){
     Session.destroy()
     .then(res=>{
@@ -66,9 +74,10 @@ class App extends Component{
           <Switch>
             <Route path="/" exact component={Welcome} />
             <Route exact path='/auctions' component={AuctionIndexPage}></Route>
-            <Route exact path='/auctions/new' component={AuctionNewPage}/>
-            <Route path='/auctions/:id' component={AuctionShowPage}/>
+            <AuthRoute exact path='/auctions/new' isAuth={this.state.user} component={AuctionNewPage}/>
+            <AuthRoute path='/auctions/:id' isAuth={this.state.user} component={AuctionShowPage}/>
             <Route path='/sign_in' render={(routeProps)=><SignInPage handleSubmit={this.handleSubmit} {...routeProps}/>} />
+            <Route path='/sign_up' render={(routeProps)=><SignUpPage handleSignUp={this.handleSignUp} {...routeProps}/>}/>
           </Switch>
         </BrowserRouter>
       </div>      

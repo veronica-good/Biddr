@@ -1,0 +1,12 @@
+<h3><%=@auction.title%></h3>
+<h3><%=@auction.description%></h3>
+
+<p>Bids:</p>
+<%=form_with model:[@auction,@bid], local: true do |f|%>
+    <%=f.number_field :offer, placeholder: 'Your offer'%>
+    <%= f.submit %>
+<%end%>
+
+<%@bids.each do |b|%>
+    <p><%=b.offer%> <%=time_ago_in_words(b.created_at)%> ago</p>
+<%end%>

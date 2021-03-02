@@ -1,25 +1,90 @@
 import logo from './logo.svg';
 import './App.css';
+import { Component } from 'react';
+import {
+  BrowserRouter,
+  Route,
+  Switch
+} from 'react-router-dom';
+import AuctionIndexPage from './components/AuctionIndexPage';
+import AuctionShowPage from './components/AuctionShowPage';
+import AuctionNewPage from './components/AuctionNewPage';
+import { Session } from './requests';
+import SignInPage from './components/SignInPage';
+import SignUpPage from './components/SignUpPage';
+import Navbar from './components/Navbar';
+import Welcome from './components/Welcome';
+import AuthRoute from './components/AuthRoute';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      user:null
+    }
+    this.handleSubmit=this.handleSubmit.bind(this)
+    this.destroySession=this.destroySession.bind(this);
+    this.handleSignUp=this.handleSignUp.bind(this)
+  }
+  componentDidMount() {
+
+    Session.currentUser()
+    .then(user=>{
+      console.log('user', user);
+      this.setState((state)=>{
+        return {user:user}
+      })
+    })
+  }
+
+  handleSignUp(){
+    Session.currentUser().then(user=>{
+      this.setState((state)=>{
+        return {user:user}
+      })
+    })
+  }
+
+  handleSubmit(params){
+    Session.create(params).then(()=>{
+      return Session.currentUser()}
+      ).then(user=>{
+        console.log('user', user);
+        this.setState((state)=>{
+          return {user:user}
+        })
+      })
+  }
+
+  destroySession(){
+    Session.destroy()
+    .then(res=>{
+      this.setState(
+          (
+          state=>{return {user:null}}
+          )
+        )
+      })
+  }
+
+  render(){
+    return(
+      <div className='App'>
+        <BrowserRouter>
+        <Navbar currentUser={this.state.user} destroySession={this.destroySession}/>
+          <Switch>
+            <Route path="/" exact component={Welcome} />
+            <Route exact path='/auctions' component={AuctionIndexPage}></Route>
+            <AuthRoute exact path='/auctions/new' isAuth={this.state.user} component={AuctionNewPage}/>
+            <Route path='/auctions/:id' component={AuctionShowPage}/>
+            <Route path='/sign_in' render={(routeProps)=><SignInPage handleSubmit={this.handleSubmit} {...routeProps}/>} />
+            <Route path='/sign_up' render={(routeProps)=><SignUpPage handleSignUp={this.handleSignUp} {...routeProps}/>}/>
+          </Switch>
+        </BrowserRouter>
+      </div>      
+    )
+  }
 }
+
 
 export default App;

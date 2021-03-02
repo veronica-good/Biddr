@@ -18,7 +18,7 @@ const SignUpPage=(props)=>{
             if (res.id){
                 console.log(res.id)
                 handleSignUp();
-                history.push('/questions')
+                history.push('/auctions')
             }
         })
 
@@ -28,7 +28,7 @@ const SignUpPage=(props)=>{
         <h1>Sign Up</h1>
         <form onSubmit={handleSubmit}>
             <div>
-                <label htmlFor="name">First Name</label>
+                <label htmlFor="name">Name</label>
                 <input type='text' name='name' id='name'/>
             </div>
             <div>

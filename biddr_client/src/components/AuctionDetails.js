@@ -4,9 +4,9 @@ const AuctionDetails = props =>{
         <div>
             <h2>{title}</h2>
             <p>{description}</p>
-            <p>Current price:{price}</p>
+            <p>Current price:${price}</p>
             <p>Ends at: {end_date}</p>
-            <p>reserve_price: {reserve_price}</p>
+            <p>reserve price: {reserve_price}</p>
         </div>
     )
 };

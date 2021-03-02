@@ -5,8 +5,11 @@ const Navbar = (props)=>{
     function handleSignOut(){
         props.destroySession()
     }
+
     return(
         <nav>
+            <NavLink to="/">Biddr</NavLink>
+            |
             <NavLink to="/">Welcome</NavLink>
             |
             <NavLink to='/auctions'>Auctions</NavLink>
@@ -23,7 +26,11 @@ const Navbar = (props)=>{
                 </div>
                 )
                 :
+                <>
                 <NavLink to='/sign_in'>Sign In</NavLink>
+                |
+                <NavLink to='/sign_up'>Sign Up</NavLink>
+                </>
             }
             
         </nav>

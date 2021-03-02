@@ -1,25 +1,17 @@
 import AuctionDetails from './AuctionDetails';
-import {Auction, Bid} from '../requests';
+import {Auction} from '../requests';
 import { Component } from 'react';
 import BidsList from './BidsList';
 import NewBidForm from './NewBidForm';
 
 class AuctionShowPage extends Component{
+
     constructor(props){
         super(props);
         this.state = {
-            auction: {},
-            errors: []
+            auction: {}
         }
-    }
-
-    createBid = (id, params) => {
-        Bid.create(id, params).then(bid => {
-          if (bid.errors) {
-            this.setState({ errors: bid.errors });
-          }
-        });
-    };
+    }    
 
     componentDidMount(){
         Auction.show(this.props.match.params.id)
@@ -33,7 +25,7 @@ class AuctionShowPage extends Component{
     }
 
     render(){
-        const {title, description, price, reserve_price, end_date, bids}=this.state.auction;
+        const {id, title, description, price, reserve_price, end_date, bids}=this.state.auction;
         return(
             <main>
                 <AuctionDetails 
@@ -45,9 +37,9 @@ class AuctionShowPage extends Component{
                 />
                 <h4>Bids</h4>
                 <NewBidForm
-                    auction={this.state.auction}
-                    onSubmit={this.createBid}
+                    id={id} 
                 />
+                <h3>Previous bids</h3>
                 <BidsList 
                     bids={bids}
                 />

@@ -23,7 +23,8 @@ class App extends Component{
       user:null
     }
     this.handleSubmit=this.handleSubmit.bind(this)
-    this.destroySession=this.destroySession.bind(this)
+    this.destroySession=this.destroySession.bind(this);
+    this.handleSignUp=this.handleSignUp.bind(this)
   }
   componentDidMount() {
 
@@ -75,7 +76,7 @@ class App extends Component{
             <Route path="/" exact component={Welcome} />
             <Route exact path='/auctions' component={AuctionIndexPage}></Route>
             <AuthRoute exact path='/auctions/new' isAuth={this.state.user} component={AuctionNewPage}/>
-            <AuthRoute path='/auctions/:id' isAuth={this.state.user} component={AuctionShowPage}/>
+            <Route path='/auctions/:id' component={AuctionShowPage}/>
             <Route path='/sign_in' render={(routeProps)=><SignInPage handleSubmit={this.handleSubmit} {...routeProps}/>} />
             <Route path='/sign_up' render={(routeProps)=><SignUpPage handleSignUp={this.handleSignUp} {...routeProps}/>}/>
           </Switch>

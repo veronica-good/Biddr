@@ -7,6 +7,7 @@ class Api::V1::UsersController < Api::ApplicationController
           :password_confirmation
         )
         if user.save
+          session[:user_id]=user.id
           render(
             json: { id: user.id }
           )
